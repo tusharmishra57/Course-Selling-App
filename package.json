@@ -16,5 +16,11 @@
   "bugs": {
     "url": "https://github.com/tusharmishra57/Course-Selling-App/issues"
   },
-  "homepage": "https://github.com/tusharmishra57/Course-Selling-App#readme"
+  "homepage": "https://github.com/tusharmishra57/Course-Selling-App#readme",
+  "dependencies": {
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.1.6",
+    "zod": "^4.3.6"
+  }
 }
