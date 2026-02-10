@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/tusharmishra57/Course-Selling-App#readme",
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "dotenv": "^17.2.4",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
