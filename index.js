@@ -8,6 +8,7 @@ const { userRouter } = require("./routes/user");
 const { courseRouter } = require("./routes/course")
 const { adminRouter } = require("./routes/admin")
 const app = express();
+app.use(express.json());
 
 const MONGO_URL = process.env.MONGO_URL;
 const PORT = process.env.PORT || 3000;
@@ -17,10 +18,6 @@ app.use("/course", courseRouter)
 app.use("/admin", adminRouter)
 
 //Login, Signup, purchase a course, sees all courses, sees the purcahsed courses
-
-
-
-
 
 async function main()
 {
