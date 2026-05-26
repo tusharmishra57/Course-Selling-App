@@ -8,7 +8,7 @@ const { purchaseModel } = require("../db");
 const { z } = require("zod");
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken");
-const JWT_SECRET = process.env.JWT_SECRET;
+const { JWT_USER_SECRET } = require("../config");
 
 userRouter.post("/signup", async function(req, res){
     const { firstName, lastName, email, password } = req.body;

@@ -1,13 +1,15 @@
+require("dotenv").config();
 const { Router } = require("express");
 const adminRouter = Router();
 
 const { adminModel } = require("../db")
+const { courseModel } = require("../db");
 
 const { z } = require("zod");
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken");
-const { parse } = require("dotenv");
-const JWT_SECRET = process.env.JWT_SECRET;
+const { JWT_ADMIN_SECRET } = require("../config");
+const { adminMiddleware } = require("../middleware/admin");
 
 adminRouter.post("/signin", async function(req, res){
     const { email, password, firstName, lastName } = req.body;
@@ -49,7 +51,7 @@ adminRouter.post("/signin", async function(req, res){
         if(e.code === 11000)
         {
             res.json({
-                msg: "User already exist"
+                msg: "admin already exist"
             })
         }
         else
@@ -66,23 +68,23 @@ adminRouter.post("/login", async function(req, res){
     const email = req.body.email;
     const password = req.body.password
 
-    const user = await adminModel.findOne({
+    const admin = await adminModel.findOne({
         email: email
     })
 
-    if(!user)
+    if(!admin)
     {
         res.json({
             msg: "This email doesn't exist in the database"
         })
     }
 
-    const passwordMatch = await bcrypt.compare(password, user.password);
+    const passwordMatch = await bcrypt.compare(password, admin.password);
 
     if(passwordMatch)
     {
         const token = jwt.sign({
-            id: user._id
+            id: admin._id
         }, JWT_SECRET)
     }
     else{
@@ -93,8 +95,18 @@ adminRouter.post("/login", async function(req, res){
 
 })
 
-adminRouter.post("/course", function(req, res){
+adminRouter.post("/course", adminMiddleware, async function(req, res){
 
+    const adminId = req.adminId;
+    const { title, description, price, imageUrl, creatorId } = req.body;
+
+    await courseModel.create({
+        title, 
+        description, 
+        price, 
+        imageUrl, 
+        creatorId: adminId
+    })
 })
 
 adminRouter.put("/course", function(rq, res){
