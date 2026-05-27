@@ -13,6 +13,6 @@ courseRouter.get("/preview", function(req, res)
 })
 
 
-modul.exports = {
+module.exports = {
     courseRouter: courseRouter
 }
