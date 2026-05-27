@@ -1,8 +1,8 @@
 // const mongoose = require("mongoose");
 // const Schema = mogoose.schema;
 
+const mongoose = require("mongoose");
 const { Schema } = require("mongoose");  //either way is fine.
-mongoose.connect("");
 const objectId = Schema.ObjectId;
 
 const userSchema = new Schema({
@@ -39,9 +39,9 @@ const adminModel = mongoose.model("admin", adminSchema);
 const courseModel = mongoose.model("course", courseSchema);
 const purchaseModel = mongoose.model("purchase", purchaseSchema);
 
-module.exports({
+module.exports = {
     userModel,
     adminModel,
     courseModel,
     purchaseModel
-})
+};
