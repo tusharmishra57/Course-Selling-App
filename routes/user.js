@@ -10,6 +10,7 @@ const {z} = require("zod");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { JWT_USER_SECRET } = require("../config")
+const { userMiddleware } = require("../middleware/user")
 
 userRouter.post("/signin", async function(req, res)
 {

@@ -5,6 +5,7 @@ const {z} = require("zod");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { JWT_ADMIN_SECRET } = require("../config")
+const { adminMiddleware } = require("../middleware/admin")
 
 adminRouter.post("/signup", async function(req, res)
 {
@@ -107,15 +108,24 @@ adminRouter.post("/signin", async function(req, res)
     })
 })
 
-adminRouter.post("/newcourse", function(req, res)
+adminRouter.post("/newcourse", adminMiddleware, async function(req, res)
 {
+    const creatorId = req.creatorID;
+    const {title, description, imageURL, price} = req.body;
+
+    const course = await courseModel.create({
+        title, description, imageURL, price, creatorID  //we should not store imageURL, instead we should create a pipeline for users to directly upload images.
+    })
+
     res.json({
+        courseID: course._id,
         message: "posted new course"
     })
 })
 
 adminRouter.put("/course", function(req, res)
 {
+    
     res.json({
         message: "course updated"
     })
