@@ -9,9 +9,9 @@ const {userModel} = require("../db");
 const {z} = require("zod");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const JWT_USER_SECRET = "user123abc";
+const { JWT_USER_SECRET } = require("../config")
 
-userRouter.post("/signin", function(req, res)
+userRouter.post("/signin", async function(req, res)
 {
     //zod validation
     const requireBody = z.object({
@@ -74,7 +74,7 @@ userRouter.post("/signin", function(req, res)
     })
 })
 
-userRouter.post("/signup", function(req, res)
+userRouter.post("/signup", async function(req, res)
 {
     const { email, password } = req.body;
 
