@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require("express");
 const mongoose = require("mongoose");
 
@@ -17,7 +19,7 @@ app.use("/admin", adminRouter);
 async function main()
 {
     try {
-        await mongoose.connect("MongoDB URL");
+        await mongoose.connect(process.env.MONGO_URL);
         console.log("Successfully connected to the mongoDB cluster");
 
         app.listen(3000, () => {
