@@ -107,8 +107,8 @@ adminRouter.post("/signin", async function(req, res)
 
 adminRouter.post("/newcourse", adminMiddleware, async function(req, res)
 {
-    const creatorId = req.creatorId;
-    const {title, description, imageURL, price} = req.body;
+    const creatorId = req.creatorId; //req.creatorId we extracted from adminMiddleware
+    const {title, description, imageUrl, price} = req.body;
 
     const course = await courseModel.create({
         title, description, imageURL, price, creatorId  //we should not store imageURL, instead we should create a pipeline for users to directly upload images.
@@ -122,6 +122,7 @@ adminRouter.post("/newcourse", adminMiddleware, async function(req, res)
 
 adminRouter.put("/course", adminMiddleware, async function(req, res)
 {
+    const creatorId = req.creatorId;  //req.creatorId we extracted from adminMiddleware
     const { title, description, imageURL, price, courseId } = req.body;
 
     const courseUpdate = await courseModel.updateOne({
@@ -138,11 +139,27 @@ adminRouter.put("/course", adminMiddleware, async function(req, res)
     })
 })
 
-adminRouter.get("/course/bulk", function(req, res)    //get all of the courses that admin has created
+adminRouter.get("/course/bulk", adminMiddleware, async function(req, res)    //get all of the courses that admin has created
 {
-    res.json({
-        message: "get my courses (admin)"
+    const creatorId = req.creatorId;
+
+    try{
+        const courses = await courseModel.find({
+        creatorId: creatorId
     })
+
+    res.json({
+        message: "get my courses (admin)",
+        courses: courses
+    })
+    }
+    catch(e)
+    {
+        res.status(500).json({
+            msg:"internal error in fetching"
+        })
+    }
+    
 })
 
 
