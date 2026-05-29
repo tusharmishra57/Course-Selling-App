@@ -19,7 +19,7 @@ adminRouter.post("/signup", async function(req, res)
 
     const parsedDataWithSucess = requireBody.safeParse(req.body);
 
-    if(!parsedDataWithSucess.sucess)
+    if(!parsedDataWithSucess.success)
     {
         res.json({
             message: "incorrect format",
@@ -103,29 +103,36 @@ adminRouter.post("/signin", async function(req, res)
         })
     }
     
-    res.json({
-        message: "signin"
-    })
 })
 
 adminRouter.post("/newcourse", adminMiddleware, async function(req, res)
 {
-    const creatorId = req.creatorID;
+    const creatorId = req.creatorId;
     const {title, description, imageURL, price} = req.body;
 
     const course = await courseModel.create({
-        title, description, imageURL, price, creatorID  //we should not store imageURL, instead we should create a pipeline for users to directly upload images.
+        title, description, imageURL, price, creatorId  //we should not store imageURL, instead we should create a pipeline for users to directly upload images.
     })
 
     res.json({
-        courseID: course._id,
+        courseId: course._id,
         message: "posted new course"
     })
 })
 
-adminRouter.put("/course", function(req, res)
+adminRouter.put("/course", adminMiddleware, async function(req, res)
 {
-    
+    const { title, description, imageURL, price, courseId } = req.body;
+
+    const courseUpdate = await courseModel.updateOne({
+        _id: courseId,  //both of these lines will find the course from DB and only the creator of that course will be able to update
+        creatorId: creatorId    //First creatorID is fetching from mongoDB, second is the one we got from adminMiddleware
+    }, {
+        title: title,
+        description: description,
+        imageUrl: imageURL,
+        price: price
+    })
     res.json({
         message: "course updated"
     })

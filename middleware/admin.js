@@ -1,20 +1,23 @@
 const jwt = require("jsonwebtoken");
-const { JWT_USER_SECRET } = require("../config");
+const { JWT_ADMIN_SECRET } = require("../config");
 
 function adminMiddleware(req, res, next)
 {
     const token = req.body.token;
 
-    const decoded = jwt.verify(token, JWT_ADMIN_SECRET);
-    if(decoded)
+    try
     {
-        req.creatorID = decoded.id;   
-        next()
+        const decoded = jwt.verify(token, JWT_ADMIN_SECRET);
+        
+        req.creatorId = decoded.id;   
+        next();
+        
     }
-    else
+    
+    catch(e)
     {
-        res.status(403).json({
-            msg:"you are not signed in yet"
+         res.status(403).json({
+         msg:"you are not signed in yet"
         })
     }
 
