@@ -7,7 +7,7 @@ function userMiddleware(req, res, next)
     const decoded = jwt.verify(token, JWT_USER_SECRET);
     if(decoded)
     {
-        req.userID = decoded.id;  //decoded.id because when i encode id in user.js(routes), i named it id.
+        req.userId = decoded.id;  //decoded.id because when i encode id in user.js(routes), i named it id.
         next()
     }
     else

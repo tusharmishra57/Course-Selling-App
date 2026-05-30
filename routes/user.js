@@ -12,7 +12,7 @@ const jwt = require("jsonwebtoken");
 const { JWT_USER_SECRET } = require("../config")
 const { userMiddleware } = require("../middleware/user")
 
-userRouter.post("/signin", async function(req, res)
+userRouter.post("/signup", async function(req, res)
 {
     //zod validation
     const requireBody = z.object({
@@ -24,7 +24,7 @@ userRouter.post("/signin", async function(req, res)
 
     const parsedDataWithSucess = requireBody.safeParse(req.body);
 
-    if(!parsedDataWithSucess.sucess)
+    if(!parsedDataWithSucess.success)
     {
         res.json({
             message: "incorrect format",
@@ -67,15 +67,11 @@ userRouter.post("/signin", async function(req, res)
 
 
     res.json({
-        message: "signup"
-    })
-
-    res.json({
         message: "signin"
     })
 })
 
-userRouter.post("/signup", async function(req, res)
+userRouter.post("/signin", async function(req, res)
 {
     const { email, password } = req.body;
 
@@ -103,7 +99,8 @@ userRouter.post("/signup", async function(req, res)
 
         //Here we can also do cookie based auth
         res.json({
-            token: token
+            token: token,
+            message: "signed in"
         })
     }
     else
@@ -113,19 +110,18 @@ userRouter.post("/signup", async function(req, res)
         })
     }
     
-    res.json({
-        message: "signin"
-    })
-
-    res.json({
-        message: "signed up"
-    })
 })
 
-userRouter.get("/purchases", function(req, res)
+userRouter.get("/purchases", userMiddleware, async function(req, res)
 {
+    const userId = req.userId;
+
+    const purchases = await userModel.find({
+        userId
+    })
     res.json({
-        message: "purchases"
+        message: "purchases",
+        purchases: purchases
     })
 })
 
